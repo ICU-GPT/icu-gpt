@@ -1,4 +1,5 @@
 import autogen
+import pandas as pd
 from autogen import ConversableAgent
 from .prompt import *
 from .f import run_sql
@@ -14,7 +15,7 @@ class ICU():
        self.conn = db_conn
        self.llm_config = llm_config
        self.sql = constom_sql if constom_sql else ''
-       self.data = ''
+       self.data = pd.DataFrame()
        self.prompt_template = constom_template if constom_template else POSTGRES_PROMPT
        self.show_sql=show_sql
        self.user_proxy = autogen.UserProxyAgent(
@@ -44,7 +45,7 @@ class ICU():
         is_termination_msg=is_termination_msg,
         )
     # Registry run_sql tools functions
-       runsql = partial(run_sql,conn=self.self.conn,show_sql=self.show_sql)
+       runsql = partial(run_sql,conn=self.self.conn,data=self.data,show_sql=self.show_sql)
        self.registry_tools(runsql,self.user_proxy,self.data_agent,"Use pandas run SQL")
     
     def sql_chat(self,input,tables:Optional[List[str]] = None):
