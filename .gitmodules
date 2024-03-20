@@ -1,0 +1,3 @@
+[submodule "icu-deploy"]
+	path = icu-deploy
+	url = https://github.com/ICU-GPT/icu-deploy
