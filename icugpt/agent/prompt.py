@@ -7,11 +7,11 @@ USER_PROXY_PROMPT = (
             + COMPLETION_PROMPT
         )
 DB_PROMPT = (
-            "Data Engineer Generate the initial SQL based on the prompt input. Send it to the Data Analyst to be run sql."
+            "Data Engineer Generate the initial SQL based on the prompt input"
             + COMPLETION_PROMPT
         )
-DATA_PROMPT = (
-            "Data Analyst, You run the SQL query, generate the response and send it client."
+EXPERT_PROMPT = (
+            "Data Expert calibration sql"
             + COMPLETION_PROMPT
         )
 

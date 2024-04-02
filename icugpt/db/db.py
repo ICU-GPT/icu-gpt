@@ -1,14 +1,19 @@
 """SQLAlchemy wrapper around a database."""
 from __future__ import annotations
 
-from typing import Any, List, Optional
+from typing import Any, List, Optional,Union
 
 from sqlalchemy import MetaData, create_engine, inspect
 from sqlalchemy.engine import Engine
 from sqlalchemy.schema import CreateTable
-
+import os
 from langchain import utils
 from langchain import SQLDatabase as _SQLDatabase
+
+DBS = ['mimiciv','mimiciii','mimiccarevue','eicu']
+SCHEAMS ={
+  'mimiciv':['mimiciv_derived','mimiciv_ed','mimiciv_hosp','mimiciv_icu','mimiciv_note']
+}
 
 class SQLDatabase(_SQLDatabase):
     """SQLAlchemy wrapper around a database."""
@@ -16,7 +21,7 @@ class SQLDatabase(_SQLDatabase):
     def __init__(
         self,
         engine: Engine,
-        schemas: List[str],
+        schemas: Optional[Union[str,List[str]]]='public',
         metadata: Optional[MetaData] = None,
         ignore_tables: Optional[List[str]] = None,
         include_tables: Optional[List[str]] = None,
@@ -29,7 +34,10 @@ class SQLDatabase(_SQLDatabase):
         """Create engine from database URI."""
         self._engine = engine
         self._schema = None
-        self._schemas = schemas
+        if isinstance(schemas,str):
+            self._schemas = [schemas]
+        else:
+            self._schemas = schemas  
         if include_tables and ignore_tables:
             raise ValueError("Cannot specify both include_tables and ignore_tables")
 
@@ -259,3 +267,14 @@ class SQLDatabase(_SQLDatabase):
             tables.append(table_info)
         final_str = "\n\n".join(tables)
         return final_str
+    
+
+def db_conn(db_name,pg_user,pg_passwd,pg_server):
+    pg_user = pg_user or  os.environ.get('PG_USER')
+    pg_passwd = pg_passwd or os.environ.get('PG_PASSWD')
+    pg_server = pg_server or os.environ.get('PG_SERVER')
+    db_name = db_name or 'mimiciv'
+    schema= SCHEAMS.get(db_name,'public')
+    db_uri = f"postgresql+psycopg2://{pg_user}:{pg_passwd}@{pg_server}/{db_name}"
+    conn = create_engine(db_uri)
+    return SQLDatabase(conn,schemas=schema),conn

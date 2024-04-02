@@ -7,7 +7,7 @@ with open('requirements.txt') as f:
 setup(
     name="icugpt",
     version="1.0.0",
-    author="xiaobai",
+    author="baicai",
     author_email="",
     description="A gpt agent for icu databases analysis",
     long_description=long_description,
@@ -19,6 +19,5 @@ setup(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-    ],
-    python_requires='>=3.10'
+    ]
 )
