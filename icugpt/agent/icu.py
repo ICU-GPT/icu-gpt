@@ -16,7 +16,7 @@ class ICU():
        self.pg_user = pg_user or  os.environ.get('PG_USER')
        self.pg_passwd = pg_passwd or os.environ.get('PG_PASSWD')
        self.pg_server = pg_server or os.environ.get('PG_SERVER')
-       self.dbconn = db_conn(self.db_name,self.pg_user,self.pg_passwd,self.pg_server)
+       self.dbconn,self.conn = db_conn(self.db_name,self.pg_user,self.pg_passwd,self.pg_server)
        self.llm_config = llm_config or {
             "temperature": 0,
             "config_list": config_list_from_models(model_list=model_list),
